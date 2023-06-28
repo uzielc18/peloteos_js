@@ -19,6 +19,7 @@ const Register = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState('')
+    const [distrito_id, setDistritoId] = useState('150131')
     const [errors, setErrors] = useState([])
 
     const submitForm = event => {
@@ -27,6 +28,7 @@ const Register = () => {
         register({
             name,
             email,
+            distrito_id,
             password,
             password_confirmation: passwordConfirmation,
             setErrors,
