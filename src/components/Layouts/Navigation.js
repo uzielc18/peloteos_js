@@ -37,6 +37,68 @@ const Navigation = ({ user }) => {
                                 active={router.pathname === '/dashboard'}>
                                 Dashboard
                             </NavLink>
+                            <NavLink
+                                href="/bancos"
+                                active={router.pathname === '/bancos'}>
+                                bancos
+                            </NavLink>
+                            <NavLink
+                                href="/canchas"
+                                active={router.pathname === '/canchas'}>
+                                canchas
+                            </NavLink>
+                            <NavLink
+                                href="/canchas_tipos"
+                                active={router.pathname === '/canchas_tipos'}>
+                                tipos canchas
+                            </NavLink>
+                            <NavLink
+                                href="/horarios"
+                                active={router.pathname === '/horarios'}>
+                                horarios
+                            </NavLink>
+                            <NavLink
+                                href="/imagenes"
+                                active={router.pathname === '/imagenes'}>
+                                imagenes
+                            </NavLink>
+                            <NavLink
+                                href="/jugadores"
+                                active={router.pathname === '/jugadores'}>
+                                jugadores
+                            </NavLink>
+                            <NavLink
+                                href="/locales"
+                                active={router.pathname === '/locales'}>
+                                locales
+                            </NavLink>
+                            <NavLink
+                                href="/pagos_socios"
+                                active={router.pathname === '/pagos_socios'}>
+                                pagos_socios
+                            </NavLink>
+                            <NavLink
+                                href="/pagos_tipos"
+                                active={router.pathname === '/pagos_tipos'}>
+                                pagos_tipos
+                            </NavLink>
+                            <NavLink
+                                href="/reservas_usuarios"
+                                active={
+                                    router.pathname === '/reservas_usuarios'
+                                }>
+                                reservas Usuarios
+                            </NavLink>
+                            <NavLink
+                                href="/socios"
+                                active={router.pathname === '/socios'}>
+                                Socios
+                            </NavLink>
+                            <NavLink
+                                href="/usuarios"
+                                active={router.pathname === '/usuarios'}>
+                                usuarios
+                            </NavLink>
                         </div>
                     </div>
 

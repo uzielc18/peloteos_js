@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
-import axios from './../../lib/axios'
 
-import CreateBancos from '@/components/bancos/CreateBancos'
+import axios from '../../lib/axios'
 
-const ShowBancos = () => {
+import CreateCanchas from './CreateCanchas'
+
+const ShowCanchas = () => {
     //const [refrescar, setRefrescar] = useState(false);
-    const [bancos, setBancos] = useState([])
+    const [canchas, setCanchas] = useState([])
     useEffect(() => {
         getAll()
     }, [])
     const getAll = async () => {
-        const response = await axios.get('api/bancos')
+        const response = await axios.get('api/canchas')
         //console.log(response.data)
-        setBancos(response.data.data)
+        setCanchas(response.data.data)
     }
     const Delete = async id => {
-        await axios.delete('api/bancos/' + id)
+        await axios.delete('api/canchas/' + id)
         getAll()
     }
     return (
@@ -25,11 +25,11 @@ const ShowBancos = () => {
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                     <div className="bg-black-300 text-start">
                         <div className="flex">
-                            <h3> Bancos </h3>
+                            <h3> Canchas </h3>
                         </div>
                         <div className="float-rigth">
-                            <CreateBancos
-                                title={'Nuevo Banco'}
+                            <CreateCanchas
+                                title={'Nuevo Cancha'}
                                 nombre_boton={'Nuevo'}
                                 getAll={getAll}
                                 item={false}
@@ -46,27 +46,27 @@ const ShowBancos = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {Array.isArray(bancos) ? (
-                                    bancos.map(banco => (
+                                {Array.isArray(canchas) ? (
+                                    canchas.map(cancha => (
                                         <tr
-                                            key={banco.id}
+                                            key={cancha.id}
                                             className="border-b dark:border-neutral-500">
                                             <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                                {banco.nombre}
+                                                {cancha.nombre}
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4">
-                                                {banco.estado}
+                                                {cancha.estado}
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4">
-                                                <CreateBancos
-                                                    title={'Editar Banco'}
+                                                <CreateCanchas
+                                                    title={'Editar cancha'}
                                                     nombre_boton={'Editar'}
                                                     getAll={getAll}
-                                                    item={banco}
+                                                    item={cancha}
                                                 />
                                                 <button
                                                     onClick={() =>
-                                                        Delete(banco.id)
+                                                        Delete(cancha.id)
                                                     }
                                                     className="bg-red-900 text-white active:bg-blue-600 font-bold uppercase text-sm px-2 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
                                                     Delete
@@ -92,4 +92,4 @@ const ShowBancos = () => {
     )
 }
 
-export default ShowBancos
+export default ShowCanchas

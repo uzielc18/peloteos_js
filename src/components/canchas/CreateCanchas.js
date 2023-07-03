@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import axios from './../../lib/axios'
+import axios from '../../lib/axios'
 
-const CreateBancos = ({ title, nombre_boton, getAll, item }) => {
+const CreateCanchas = ({ title, nombre_boton, getAll, item }) => {
     const [showModal, setShowModal] = useState(false)
-    const [nombre, setNombre] = useState('')
-    const [estado, setEstado] = useState(1)
+    const [locale_id, setLocaleId] = useState('')
+    const [socio_id, setSocioId] = useState('')
+    const [canchas_tipo_id, setCanchasTipoId] = useState('')
+    const [jugadores_id, setJugadoreId] = useState('')
+    const [codigo, setCodigo] = useState('')
+    const [prefijo, setPrefijo] = useState('')
+    const [direccion, setDireccion] = useState('')
+    const [aforo, setAforo] = useState('')
+    const [google_map, setGoogleMap] = useState(1)
+    const [lat, setLet] = useState(1)
+    const [lang, setLang] = useState(1)
+    const [min_horas, setMinHoras] = useState(1)
+    const [max_horas, setMaxHoras] = useState(1)
+    const [precio, setPrecios] = useState(1)
 
     if (item) {
         useEffect(() => {
@@ -21,14 +33,14 @@ const CreateBancos = ({ title, nombre_boton, getAll, item }) => {
                 estado: estado,
             }
 
-            await axios.put('api/bancos/' + item.id, data)
+            await axios.put('api/canchas/' + item.id, data)
         } else {
             const data = {
                 nombre: nombre,
                 estado: estado,
             }
 
-            await axios.post('api/bancos', data)
+            await axios.post('api/canchas', data)
         }
         getAll()
         setShowModal(false)
@@ -122,4 +134,4 @@ const CreateBancos = ({ title, nombre_boton, getAll, item }) => {
     )
 }
 
-export default CreateBancos
+export default CreateCanchas
