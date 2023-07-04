@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from './../../lib/axios'
-
+import {
+    CheckIcon,PlusIcon
+  } from '@heroicons/react/20/solid'
 const CreateBancos = ({ title, nombre_boton, getAll, item }) => {
     const [showModal, setShowModal] = useState(false)
     const [nombre, setNombre] = useState('')
@@ -39,7 +41,7 @@ const CreateBancos = ({ title, nombre_boton, getAll, item }) => {
                 className="bg-blue-900 text-white active:bg-blue-600 font-bold uppercase text-sm px-2 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => setShowModal(true)}>
-                {title}
+                <PlusIcon className="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" /> {title}
             </button>
             {showModal ? (
                 <>
