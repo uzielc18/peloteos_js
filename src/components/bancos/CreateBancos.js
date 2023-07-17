@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import axios from './../../lib/axios'
-import { CheckIcon, ClockIcon, PencilIcon, PlusIcon } from '@heroicons/react/20/solid'
+import {
+    CheckIcon,
+    ClockIcon,
+    PencilIcon,
+    PlusIcon,
+} from '@heroicons/react/20/solid'
 import { Switch } from '@headlessui/react'
-const CreateBancos = ({ title, nombre_boton, getAll, item, icono}) => {
+const CreateBancos = ({ title, nombre_boton, getAll, item, icono }) => {
     const [showModal, setShowModal] = useState(false)
     const [nombre, setNombre] = useState('')
     const [estado, setEstado] = useState(1)
@@ -40,14 +45,22 @@ const CreateBancos = ({ title, nombre_boton, getAll, item, icono}) => {
                 className="bg-blue-900 text-white active:bg-blue-600 font-bold uppercase text-sm px-2 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => setShowModal(true)}>
-                {icono=='nuevo'?(<PlusIcon
-                    className="-ml-0.5 mr-1.5 h-5 w-5"
-                    aria-hidden="true"
-                />):''}
-                {icono=='editar'?(<PencilIcon
-                    className="-ml-0.5 mr-1.5 h-5 w-5"
-                    aria-hidden="true"
-                />):''}
+                {icono == 'nuevo' ? (
+                    <PlusIcon
+                        className="-ml-0.5 mr-1.5 h-5 w-5"
+                        aria-hidden="true"
+                    />
+                ) : (
+                    ''
+                )}
+                {icono == 'editar' ? (
+                    <PencilIcon
+                        className="-ml-0.5 mr-1.5 h-5 w-5"
+                        aria-hidden="true"
+                    />
+                ) : (
+                    ''
+                )}
             </button>
             {showModal ? (
                 <>
@@ -65,51 +78,63 @@ const CreateBancos = ({ title, nombre_boton, getAll, item, icono}) => {
                                             className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                                             onClick={() => setShowModal(false)}>
                                             <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                                               <ClockIcon />
+                                                <ClockIcon />
                                             </span>
                                         </button>
                                     </div>
                                     {/*body*/}
                                     <div className="relative p-6 flex-auto">
-                                    <div className="md:flex md:items-center mb-6">
-                                        <div className="md:w-1/3">
-                                            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
-                                                Nombre
-                                            </label>
+                                        <div className="md:flex md:items-center mb-6">
+                                            <div className="md:w-1/3">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    for="inline-full-name">
+                                                    Nombre
+                                                </label>
+                                            </div>
+                                            <div className="md:w-2/3">
+                                                <input
+                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                                    value={nombre}
+                                                    onChange={e =>
+                                                        setNombre(
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    placeholder="Nombre"
+                                                    type="text"
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="md:w-2/3">
-                                            <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
-                                            value={nombre}
-                                            onChange={e =>
-                                                setNombre(e.target.value)
-                                            }
-                                            placeholder="Nombre"
-                                            type="text"  />
+                                        <div className="md:flex md:items-center mb-6">
+                                            <div className="md:w-1/3">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    for="inline-full-name">
+                                                    Estado
+                                                </label>
+                                            </div>
+                                            <div className="md:w-2/3">
+                                                <Switch
+                                                    checked={estado}
+                                                    onChange={setEstado}
+                                                    className={`${
+                                                        estado
+                                                            ? 'bg-blue-600'
+                                                            : 'bg-gray-200'
+                                                    } relative inline-flex h-6 w-11 items-center rounded-full`}>
+                                                    <span className="sr-only">
+                                                        Enable notifications
+                                                    </span>
+                                                    <span
+                                                        className={`${
+                                                            estado
+                                                                ? 'translate-x-6'
+                                                                : 'translate-x-1'
+                                                        } inline-block h-4 w-4 transform rounded-full bg-white transition`}></span>
+                                                </Switch>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="md:flex md:items-center mb-6">
-                                        <div className="md:w-1/3">
-                                            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
-                                                Estado
-                                            </label>
-                                        </div>
-                                        <div className="md:w-2/3">
-                                        <Switch
-                                        checked={estado}
-                                        onChange={setEstado}
-                                        className={`${
-                                            estado ? 'bg-blue-600' : 'bg-gray-200'
-                                        } relative inline-flex h-6 w-11 items-center rounded-full`}
-                                      >
-                                        <span className="sr-only">Enable notifications</span>
-                                        <span
-                                          className={`${
-                                            estado ? 'translate-x-6' : 'translate-x-1'
-                                          } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                                        />
-                                      </Switch>
-                                        </div>
-                                    </div>
                                     </div>
                                     {/*footer*/}
                                     <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">

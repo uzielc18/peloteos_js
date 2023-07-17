@@ -1,11 +1,15 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import axios from '../../lib/axios'
 import { Combobox, Transition, Switch } from '@headlessui/react'
-import { CheckIcon, PencilIcon, PlusIcon, ClockIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import {
+    CheckIcon,
+    PencilIcon,
+    PlusIcon,
+    ClockIcon,
+    ChevronUpDownIcon,
+} from '@heroicons/react/20/solid'
 
 const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
-    
-
     const [showModal, setShowModal] = useState(false)
     const [user_id, setUserId] = useState('')
     const [users, setUsers] = useState([])
@@ -14,22 +18,30 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
     const [dni, setDni] = useState('')
     const [direccion, setDireccion] = useState('')
     const [telefono, setTelefono] = useState('')
-    const [celular, setCecular] = useState('')
+    const [celular, setCelular] = useState('')
     const [correo_personal, setCorreoPersonal] = useState('')
     const [correo_empresarial, setCorreoEmpresarial] = useState(1)
     const [estado, setEstado] = useState(1)
     const [query, setQuery] = useState('')
-    const getUsers = async (q) => {
+    const getUsers = async q => {
         const response = await axios.get('api/users-sin-socio?q=' + q)
         //console.log(response.data)
         setUsers(response.data.data)
     }
-   
+
     if (item) {
         useEffect(() => {
-            setEstado(item.estado)
+            setCelular(item.celular)
+            setCorreoEmpresarial(item.correo_empresarial)
+            setCorreoPersonal(item.correo_personal)
+            setDireccion(item.direccion)
+            setDni(item.dni)
+            //setQuery(item.estado)
+            setRazonSocial(item.razon_social)
             setRuc(item.ruc)
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+            setTelefono(item.telefono)
+            setUserId(item.user_id)
+            setUsers([]) // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [])
     }
     const store = async e => {
@@ -74,14 +86,22 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
                 className="bg-blue-900 text-white active:bg-blue-600 font-bold uppercase text-sm px-2 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => setShowModal(true)}>
-                {icono == 'nuevo' ? (<PlusIcon
-                    className="-ml-0.5 mr-1.5 h-5 w-5"
-                    aria-hidden="true"
-                />) : ''}
-                {icono == 'editar' ? (<PencilIcon
-                    className="-ml-0.5 mr-1.5 h-5 w-5"
-                    aria-hidden="true"
-                />) : ''}
+                {icono == 'nuevo' ? (
+                    <PlusIcon
+                        className="-ml-0.5 mr-1.5 h-5 w-5"
+                        aria-hidden="true"
+                    />
+                ) : (
+                    ''
+                )}
+                {icono == 'editar' ? (
+                    <PencilIcon
+                        className="-ml-0.5 mr-1.5 h-5 w-5"
+                        aria-hidden="true"
+                    />
+                ) : (
+                    ''
+                )}
             </button>
             {showModal ? (
                 <>
@@ -107,206 +127,305 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
                                     <div className="relative p-6 flex-auto">
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     Usuario
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
-                                                <Combobox value={user_id} onChange={setUserId}>
-                                                    <div className="relative mt-1">
-                                                        <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-                                                            <Combobox.Input
-                                                                className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                                                                displayValue={(user) => user.name}
-                                                                onChange={(event) => getUsers(event.target.value)}
-                                                            />
-                                                            <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                                                <ChevronUpDownIcon
-                                                                    className="h-5 w-5 text-gray-400"
-                                                                    aria-hidden="true"
-                                                                />
-                                                            </Combobox.Button>
-                                                        </div>
-                                                        <Transition
-                                                            as={Fragment}
-                                                            leave="transition ease-in duration-100"
-                                                            leaveFrom="opacity-100"
-                                                            leaveTo="opacity-0"
-                                                            afterLeave={() => setQuery('')}
-                                                        >
-                                                            <Combobox.Options className="absolute z-1 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                                                {users.length === 0 && query !== '' ? (
-                                                                    <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                                                                        Nothing found.
-                                                                    </div>
-                                                                ) : (
-                                                                    users.map((user) => (
-                                                                        <Combobox.Option
-                                                                            key={user.id}
-                                                                            className={({ active }) =>
-                                                                                `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-teal-600 text-white' : 'text-gray-900'
-                                                                                }`
-                                                                            }
-                                                                            value={user}
-                                                                        >
-                                                                            {({ user_id, active }) => (
-                                                                                <>
-                                                                                    <span
-                                                                                        className={`block truncate ${user_id ? 'font-medium' : 'font-normal'
-                                                                                            }`}
-                                                                                    >
-                                                                                        {user.name}
-                                                                                    </span>
-                                                                                    {user_id ? (
-                                                                                        <span
-                                                                                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-teal-600'
-                                                                                                }`}
-                                                                                        >
-                                                                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                                                                        </span>
-                                                                                    ) : null}
-                                                                                </>
-                                                                            )}
-                                                                        </Combobox.Option>
-                                                                    ))
-                                                                )}
-                                                            </Combobox.Options>
-                                                        </Transition>
-                                                    </div>
-                                                </Combobox>
+                                                <div>
+                                                    {item ? (
+                                                        <span>
+                                                            {item.user_name}
+                                                        </span>
+                                                    ) : (
+                                                        <Combobox
+                                                            value={user_id}
+                                                            onChange={
+                                                                setUserId
+                                                            }>
+                                                            <div className="relative mt-1">
+                                                                <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                                                                    <Combobox.Input
+                                                                        className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+                                                                        displayValue={user =>
+                                                                            user.name
+                                                                        }
+                                                                        onChange={event =>
+                                                                            getUsers(
+                                                                                event
+                                                                                    .target
+                                                                                    .value,
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                                                        <ChevronUpDownIcon
+                                                                            className="h-5 w-5 text-gray-400"
+                                                                            aria-hidden="true"
+                                                                        />
+                                                                    </Combobox.Button>
+                                                                </div>
+                                                                <Transition
+                                                                    as={
+                                                                        Fragment
+                                                                    }
+                                                                    leave="transition ease-in duration-100"
+                                                                    leaveFrom="opacity-100"
+                                                                    leaveTo="opacity-0"
+                                                                    afterLeave={() =>
+                                                                        setQuery(
+                                                                            '',
+                                                                        )
+                                                                    }>
+                                                                    <Combobox.Options className="absolute z-1 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                                                        {users.length ===
+                                                                            0 &&
+                                                                        query !==
+                                                                            '' ? (
+                                                                            <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                                                                                Nothing
+                                                                                found.
+                                                                            </div>
+                                                                        ) : (
+                                                                            users.map(
+                                                                                user => (
+                                                                                    <Combobox.Option
+                                                                                        key={
+                                                                                            user.id
+                                                                                        }
+                                                                                        className={({
+                                                                                            active,
+                                                                                        }) =>
+                                                                                            `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                                                                                active
+                                                                                                    ? 'bg-teal-600 text-white'
+                                                                                                    : 'text-gray-900'
+                                                                                            }`
+                                                                                        }
+                                                                                        value={
+                                                                                            user
+                                                                                        }>
+                                                                                        {({
+                                                                                            user_id,
+                                                                                            active,
+                                                                                        }) => (
+                                                                                            <>
+                                                                                                <span
+                                                                                                    className={`block truncate ${
+                                                                                                        user_id
+                                                                                                            ? 'font-medium'
+                                                                                                            : 'font-normal'
+                                                                                                    }`}>
+                                                                                                    {
+                                                                                                        user.name
+                                                                                                    }
+                                                                                                </span>
+                                                                                                {user_id ? (
+                                                                                                    <span
+                                                                                                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                                                                                            active
+                                                                                                                ? 'text-white'
+                                                                                                                : 'text-teal-600'
+                                                                                                        }`}>
+                                                                                                        <CheckIcon
+                                                                                                            className="h-5 w-5"
+                                                                                                            aria-hidden="true"
+                                                                                                        />
+                                                                                                    </span>
+                                                                                                ) : null}
+                                                                                            </>
+                                                                                        )}
+                                                                                    </Combobox.Option>
+                                                                                ),
+                                                                            )
+                                                                        )}
+                                                                    </Combobox.Options>
+                                                                </Transition>
+                                                            </div>
+                                                        </Combobox>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     Razon Social
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
-                                                <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                                <input
+                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                                     value={razon_social}
                                                     onChange={e =>
-                                                        setRazonSocial(e.target.value)
+                                                        setRazonSocial(
+                                                            e.target.value,
+                                                        )
                                                     }
                                                     placeholder="Razon Social"
-                                                    type="text" />
+                                                    type="text"
+                                                />
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     Ruc
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
-                                                <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                                <input
+                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                                     value={ruc}
                                                     onChange={e =>
                                                         setRuc(e.target.value)
                                                     }
                                                     placeholder="Ruc"
-                                                    type="text" />
+                                                    type="text"
+                                                />
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     DNI
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
-                                                <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                                <input
+                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                                     value={dni}
                                                     onChange={e =>
                                                         setDni(e.target.value)
                                                     }
                                                     placeholder="Dni"
-                                                    type="text" />
+                                                    type="text"
+                                                />
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     Dirección
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
-                                                <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                                <input
+                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                                     value={dni}
                                                     onChange={e =>
-                                                        setDireccion(e.target.value)
+                                                        setDireccion(
+                                                            e.target.value,
+                                                        )
                                                     }
                                                     placeholder="Dirección"
-                                                    type="text" />
+                                                    type="text"
+                                                />
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     Telefono
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
-                                                <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                                <input
+                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                                     value={dni}
                                                     onChange={e =>
-                                                        setTelefono(e.target.value)
+                                                        setTelefono(
+                                                            e.target.value,
+                                                        )
                                                     }
                                                     placeholder="Telefono"
-                                                    type="text" />
+                                                    type="text"
+                                                />
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     Celular
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
-                                                <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                                <input
+                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                                     value={dni}
                                                     onChange={e =>
-                                                        setCecular(e.target.value)
+                                                        setCecular(
+                                                            e.target.value,
+                                                        )
                                                     }
                                                     placeholder="Celular"
-                                                    type="text" />
+                                                    type="text"
+                                                />
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     Correo Personal
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
-                                                <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                                <input
+                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                                     value={dni}
                                                     onChange={e =>
-                                                        setCorreoPersonal(e.target.value)
+                                                        setCorreoPersonal(
+                                                            e.target.value,
+                                                        )
                                                     }
                                                     placeholder="Correo Personal"
-                                                    type="text" />
+                                                    type="text"
+                                                />
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     Correo empresarial
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
-                                                <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                                <input
+                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                                     value={dni}
                                                     onChange={e =>
-                                                        setCorreoEmpresarial(e.target.value)
+                                                        setCorreoEmpresarial(
+                                                            e.target.value,
+                                                        )
                                                     }
                                                     placeholder="Correo empresarial"
-                                                    type="text" />
+                                                    type="text"
+                                                />
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">
                                             <div className="md:w-1/3">
-                                                <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
                                                     Estado
                                                 </label>
                                             </div>
@@ -314,14 +433,20 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
                                                 <Switch
                                                     checked={estado}
                                                     onChange={setEstado}
-                                                    className={`${estado ? 'bg-blue-600' : 'bg-gray-200'
-                                                        } relative inline-flex h-6 w-11 items-center rounded-full`}
-                                                >
-                                                    <span className="sr-only">Enable notifications</span>
+                                                    className={`${
+                                                        estado
+                                                            ? 'bg-blue-600'
+                                                            : 'bg-gray-200'
+                                                    } relative inline-flex h-6 w-11 items-center rounded-full`}>
+                                                    <span className="sr-only">
+                                                        Enable notifications
+                                                    </span>
                                                     <span
-                                                        className={`${estado ? 'translate-x-6' : 'translate-x-1'
-                                                            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                                                    />
+                                                        className={`${
+                                                            estado
+                                                                ? 'translate-x-6'
+                                                                : 'translate-x-1'
+                                                        } inline-block h-4 w-4 transform rounded-full bg-white transition`}></span>
                                                 </Switch>
                                             </div>
                                         </div>
