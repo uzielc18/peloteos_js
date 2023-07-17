@@ -2,14 +2,6 @@ import React, { useEffect, useState, Fragment } from 'react'
 import Link from 'next/link'
 import axios from './../../lib/axios'
 import {
-    BriefcaseIcon,
-    CalendarIcon,
-    CheckIcon,
-    ChevronDownIcon,
-    CurrencyDollarIcon,
-    LinkIcon,
-    MapPinIcon,
-    PencilIcon,
     TrashIcon,
 } from '@heroicons/react/20/solid'
 import { Menu, Transition } from '@headlessui/react'

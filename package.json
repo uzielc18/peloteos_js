@@ -10,7 +10,7 @@
     "lint:fix": "next lint --fix"
   },
   "dependencies": {
-    "@headlessui/react": "^0.0.0-insiders.a9e8563",
+    "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "axios": "^0.21.1",
     "next": "^13.0.3",

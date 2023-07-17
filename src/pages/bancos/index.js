@@ -13,7 +13,6 @@ const bancos = () => {
             <div className="py-1">
                 <div className="max-w-10xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-1" />
                         <div className="p-1 bg-white border-b border-gray-200">
                             <ShowBancos />
                         </div>
