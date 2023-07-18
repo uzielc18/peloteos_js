@@ -20,7 +20,7 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
     const [telefono, setTelefono] = useState('')
     const [celular, setCelular] = useState('')
     const [correo_personal, setCorreoPersonal] = useState('')
-    const [correo_empresarial, setCorreoEmpresarial] = useState(1)
+    const [correo_empresarial, setCorreoEmpresarial] = useState('')
     const [estado, setEstado] = useState(1)
     const [query, setQuery] = useState('')
     const getUsers = async q => {
@@ -48,7 +48,7 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
         e.preventDefault()
         if (item) {
             const data = {
-                user_id: user_id,
+                user_id: user_id.id,
                 razon_social: razon_social,
                 ruc: ruc,
                 dni: dni,
@@ -63,7 +63,7 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
             await axios.put('api/socios/' + item.id, data)
         } else {
             const data = {
-                user_id: user_id,
+                user_id: user_id.id,
                 razon_social: razon_social,
                 ruc: ruc,
                 dni: dni,
@@ -322,7 +322,7 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
                                             <div className="md:w-2/3">
                                                 <input
                                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                                    value={dni}
+                                                    value={direccion}
                                                     onChange={e =>
                                                         setDireccion(
                                                             e.target.value,
@@ -344,7 +344,7 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
                                             <div className="md:w-2/3">
                                                 <input
                                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                                    value={dni}
+                                                    value={telefono}
                                                     onChange={e =>
                                                         setTelefono(
                                                             e.target.value,
@@ -366,7 +366,7 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
                                             <div className="md:w-2/3">
                                                 <input
                                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                                    value={dni}
+                                                    value={celular}
                                                     onChange={e =>
                                                         setCecular(
                                                             e.target.value,
@@ -388,7 +388,7 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
                                             <div className="md:w-2/3">
                                                 <input
                                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                                    value={dni}
+                                                    value={correo_personal}
                                                     onChange={e =>
                                                         setCorreoPersonal(
                                                             e.target.value,
@@ -410,7 +410,7 @@ const CreateSocios = ({ title, nombre_boton, getAll, item, icono }) => {
                                             <div className="md:w-2/3">
                                                 <input
                                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                                    value={dni}
+                                                    value={correo_empresarial}
                                                     onChange={e =>
                                                         setCorreoEmpresarial(
                                                             e.target.value,

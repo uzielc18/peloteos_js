@@ -12,7 +12,7 @@ import {
 const CreateCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
     const [showModal, setShowModal] = useState(false)
     const [locale_id, setLocaleId] = useState('')
-    const [locales, setLocales] = useState('')
+    const [locales, setLocales] = useState([])
     const [socio_id, setSocioId] = useState('')
     const [socios, setSocios] = useState([])
     const [canchas_tipo_id, setCanchasTipoId] = useState('')
@@ -29,18 +29,29 @@ const CreateCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
     const [precio, setPrecios] = useState(1)
     const [estado, setEstado] = useState(1)
     const [query, setQuery] = useState('')
+    const [query_local, setQueryLocal] = useState('')
 
     const getSocios = async q => {
         const response = await axios.get('api/socios?q=' + q)
         //console.log(response.data)
         setSocios(response.data.data)
     }
-
     const getLocales = async q => {
-        const response = await axios.get('api/locales?q=' + q)
+        const response = await axios.get(
+            'api/mis-locales/' + socio_id + '?q=' + q,
+        )
         //console.log(response.data)
-        setSocios(response.data.data)
+        setLocales(response.data.data)
     }
+    const filteredLocal =
+        query_local === ''
+            ? locales
+            : locales.filter(local =>
+                  local.nombre
+                      .toLowerCase()
+                      .replace(/\s+/g, '')
+                      .includes(query_local.toLowerCase().replace(/\s+/g, '')),
+              )
 
     if (item) {
         useEffect(() => {
@@ -119,19 +130,27 @@ const CreateCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
                                                 <label
                                                     className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
                                                     htmlFor="inline-full-name">
-                                                    Nombre
+                                                    Socio
                                                 </label>
                                             </div>
                                             <div className="md:w-2/3">
+                                            <div>
+                                            {item ? (
+                                                <span>
+                                                    {item.razon_social}
+                                                </span>
+                                            ) : (
                                                 <Combobox
                                                     value={socio_id}
-                                                    onChange={setSocioId}>
+                                                    onChange={
+                                                        setSocioId
+                                                    }>
                                                     <div className="relative mt-1">
                                                         <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                                                             <Combobox.Input
                                                                 className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                                                                displayValue={person =>
-                                                                    person.razon_social
+                                                                displayValue={socio =>
+                                                                    socio.razon_social
                                                                 }
                                                                 onChange={event =>
                                                                     getSocios(
@@ -149,27 +168,32 @@ const CreateCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
                                                             </Combobox.Button>
                                                         </div>
                                                         <Transition
-                                                            as={Fragment}
+                                                            as={
+                                                                Fragment
+                                                            }
                                                             leave="transition ease-in duration-100"
                                                             leaveFrom="opacity-100"
                                                             leaveTo="opacity-0"
                                                             afterLeave={() =>
-                                                                setQuery('')
+                                                                setQuery(
+                                                                    '',
+                                                                )
                                                             }>
-                                                            <Combobox.Options className="absolute z-1 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                                            <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                                                 {socios.length ===
                                                                     0 &&
-                                                                query !== '' ? (
+                                                                query !==
+                                                                    '' ? (
                                                                     <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                                                                         Nothing
                                                                         found.
                                                                     </div>
                                                                 ) : (
                                                                     socios.map(
-                                                                        person => (
+                                                                        socio => (
                                                                             <Combobox.Option
                                                                                 key={
-                                                                                    person.id
+                                                                                    socio.user_id
                                                                                 }
                                                                                 className={({
                                                                                     active,
@@ -181,7 +205,7 @@ const CreateCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
                                                                                     }`
                                                                                 }
                                                                                 value={
-                                                                                    person
+                                                                                    socio
                                                                                 }>
                                                                                 {({
                                                                                     socio_id,
@@ -195,7 +219,7 @@ const CreateCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
                                                                                                     : 'font-normal'
                                                                                             }`}>
                                                                                             {
-                                                                                                person.razon_social
+                                                                                                socio.razon_social
                                                                                             }
                                                                                         </span>
                                                                                         {socio_id ? (
@@ -221,6 +245,84 @@ const CreateCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
                                                         </Transition>
                                                     </div>
                                                 </Combobox>
+                                            )}
+                                        </div>
+                                            </div>
+                                        </div>
+                                        <div className="md:flex md:items-center mb-6">
+                                            <div className="md:w-1/3">
+                                                <label
+                                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                                    htmlFor="inline-full-name">
+                                                    Local
+                                                </label>
+                                            </div>
+                                            <div className="md:w-2/3">
+                                            <Combobox value={locale_id} onChange={setLocaleId}>
+                                            <div className="relative mt-1">
+                                              <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                                                <Combobox.Input
+                                                  className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+                                                  displayValue={(local) => local.nombre}
+                                                  onChange={(event) => setLocales(event.target.value)}
+                                                />
+                                                <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                                  <ChevronUpDownIcon
+                                                    className="h-5 w-5 text-gray-400"
+                                                    aria-hidden="true"
+                                                  />
+                                                </Combobox.Button>
+                                              </div>
+                                              <Transition
+                                                as={Fragment}
+                                                leave="transition ease-in duration-100"
+                                                leaveFrom="opacity-100"
+                                                leaveTo="opacity-0"
+                                                afterLeave={() => setQueryLocal('')}
+                                              >
+                                                <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                                  {filteredLocal.length === 0 && query_local !== '' ? (
+                                                    <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                                                      Nothing found.
+                                                    </div>
+                                                  ) : (
+                                                    filteredLocal.map((local) => (
+                                                      <Combobox.Option
+                                                        key={local.id}
+                                                        className={({ active }) =>
+                                                          `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                                            active ? 'bg-teal-600 text-white' : 'text-gray-900'
+                                                          }`
+                                                        }
+                                                        value={local}
+                                                      >
+                                                        {({ locale_id, active }) => (
+                                                          <>
+                                                            <span
+                                                              className={`block truncate ${
+                                                                selected ? 'font-medium' : 'font-normal'
+                                                              }`}
+                                                            >
+                                                              {person.name}
+                                                            </span>
+                                                            {selected ? (
+                                                              <span
+                                                                className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                                                  active ? 'text-white' : 'text-teal-600'
+                                                                }`}
+                                                              >
+                                                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                              </span>
+                                                            ) : null}
+                                                          </>
+                                                        )}
+                                                      </Combobox.Option>
+                                                    ))
+                                                  )}
+                                                </Combobox.Options>
+                                              </Transition>
+                                            </div>
+                                          </Combobox>
                                             </div>
                                         </div>
                                         <div className="md:flex md:items-center mb-6">

@@ -1,42 +1,39 @@
 import React, { useEffect, useState, Fragment } from 'react'
-import axios from './../../lib/axios'
-import { BuildingLibraryIcon, TrashIcon, UsersIcon } from '@heroicons/react/20/solid'
-import CreateLocales from './CreateLocales'
+import axios from '../../lib/axios'
+import { TrashIcon } from '@heroicons/react/20/solid'
+import CreateTipoCanchas from '@/components/tipos_canchas/CreateTipoCanchas'
 
-const ShowLocales = () => {
-    const [locales, setLocales] = useState([])
+const ShowTipoCanchas = () => {
+    //const [refrescar, setRefrescar] = useState(false);
+    const [tipo_canchas, setTipoCanchas] = useState([])
     useEffect(() => {
         getAll()
     }, [])
     const getAll = async () => {
-        const response = await axios.get('api/locales')
+        const response = await axios.get('api/canchasTipos')
         //console.log(response.data)
-        setLocales(response.data.data)
+        setTipoCanchas(response.data.data)
     }
     const Delete = async id => {
-        await axios.delete('api/locales/' + id)
+        await axios.delete('api/canchasTipos/' + id)
         getAll()
     }
-
-  return (
-    <div className="p-2">
-    <div className="lg:flex lg:items-center lg:justify-between">
+    return (
+        <div className="p-2">
+            <div className="lg:flex lg:items-center lg:justify-between">
                 <div className="min-w-0 flex-1">
                     <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-                        <BuildingLibraryIcon
-                            className="-mr-1 ml-1.5 h-8 w-8 text-gray-500 inline align-top"
-                            aria-hidden="true"
-                        />
-                        Locales
+                        Tipos de Canchas
                     </h2>
                     <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
-                        <p className="text-gray-500">Listado de los Socios</p>
+                        <p className="text-gray-500">Listado de los tipos de canchas</p>
+                      
                     </div>
                 </div>
                 <div className="mt-5 flex lg:ml-4 lg:mt-0">
                     <span className="sm:ml-3">
-                        <CreateLocales
-                            title={'Nuevo Banco'}
+                        <CreateTipoCanchas
+                            title={'Tipos de canchas'}
                             nombre_boton={'Nuevo'}
                             getAll={getAll}
                             item={false}
@@ -44,9 +41,10 @@ const ShowLocales = () => {
                             className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         />
                     </span>
+
+                 
                 </div>
             </div>
-            
 
             <div className="flex flex-col p-2">
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -58,58 +56,44 @@ const ShowLocales = () => {
                                 <table className="min-w-full text-left text-sm font-light">
                                     <thead className="border-b font-medium dark:border-neutral-500">
                                         <tr>
-                                            <th scope="col">Codigo</th>
-                                            <th scope="col">Socio</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Direccion</th>
-                                            <th scope="col">Maps</th>
-                                            <th scope="col">Lat/Lang</th>
+                                        <th scope="col">id</th>
+                                        <th scope="col">Código</th>
+                                        <th scope="col">nombre</th>
+                                            <th scope="col">estado</th>
                                             <th scope="col">Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {Array.isArray(locales) ? (
-                                            locales.map(local => (
+                                        {Array.isArray(tipo_canchas) ? (
+                                            tipo_canchas.map(tipo => (
                                                 <tr
-                                                    key={local.id}
+                                                    key={tipo.id}
                                                     className="border-b dark:border-neutral-500">
                                                     <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                                        {local.codigo}
+                                                        {tipo.id}
                                                     </td>
                                                     <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                                        {local.socio_razon_social}
+                                                        {tipo.codigo}
                                                     </td>
                                                     <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                                        {local.nomnbre}
+                                                        {tipo.nombre}
                                                     </td>
-                                                    <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                                        {local.direccion}
-                                                    </td>
-                                                    <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                                        {local.google_map}
-                                                    </td>
-                                                    <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                                        -{local.lat}
-                                                        <br />-{local.lang}
-                                                    </td>
-                                                    
                                                     <td className="whitespace-nowrap px-6 py-4">
-                                                        <CreateLocales
-                                                            title={
-                                                                'Editar Local'
-                                                            }
+                                                        {tipo.estado}
+                                                    </td>
+                                                    <td className="whitespace-nowrap px-6 py-4">
+                                                        <CreateTipoCanchas
+                                                           
                                                             nombre_boton={
                                                                 'Editar'
                                                             }
                                                             getAll={getAll}
-                                                            item={local}
+                                                            item={tipo}
                                                             icono={'editar'}
                                                         />
                                                         <button
                                                             onClick={() =>
-                                                                Delete(
-                                                                    local.id,
-                                                                )
+                                                                Delete(tipo.id)
                                                             }
                                                             className="bg-red-900 text-white active:bg-blue-600 font-bold uppercase text-sm px-2 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
                                                             <TrashIcon className='className="-ml-0.5 mr-1.5 h-5 w-5"' />
@@ -121,7 +105,7 @@ const ShowLocales = () => {
                                             <tr className="border-b dark:border-neutral-500">
                                                 <td
                                                     className="whitespace-nowrap px-6 py-4 font-medium"
-                                                    colSpan={7}>
+                                                    colSpan={3}>
                                                     No hay registros
                                                 </td>
                                             </tr>
@@ -133,8 +117,8 @@ const ShowLocales = () => {
                     </div>
                 </div>
             </div>
-    </div>
-  )
+        </div>
+    )
 }
 
-export default ShowLocales
+export default ShowTipoCanchas

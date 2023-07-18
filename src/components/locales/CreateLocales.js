@@ -7,9 +7,71 @@ import {
     PlusIcon,
     ClockIcon,
     ChevronUpDownIcon,
+    XCircleIcon,
 } from '@heroicons/react/20/solid'
 
 const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
+    const [showModal, setShowModal] = useState(false)
+    const [socio_id, setSocioId] = useState('')
+    const [socios, setSocios] = useState([])
+    const [nombre, setNombre] = useState('')
+    const [codigo, setCodigo] = useState('')
+    const [direccion, setDireccion] = useState('')
+    const [google_map, setGoogleMap] = useState('')
+    const [lat, setLat] = useState('')
+    const [lang, setLang] = useState('')
+    const [query, setQuery] = useState('')
+    const [estado, setEstado] = useState(1)
+    const getSocios = async q => {
+        const response = await axios.get('api/socios?q=' + q)
+        //console.log(response.data)
+        setSocios(response.data.data)
+    }
+    if (item) {
+        useEffect(() => {
+            setSocioId(item.socio_id)
+            setNombre(item.nombre)
+            setCodigo(item.codigo)
+            setDireccion(item.direccion)
+            setGoogleMap(item.google_map)
+            //setQuery(item.estado)
+            setLat(item.lat)
+            setLang(item.lang)
+            setSocios([]) // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [])
+    }
+    const store = async e => {
+        e.preventDefault()
+        if (item) {
+            const data = {
+                socio_id: socio_id.user_id,
+                nombre: nombre,
+                codigo: codigo,
+                direccion: direccion,
+                google_map: google_map,
+                lat: lat,
+                lang: lang,
+                estado: estado,
+            }
+
+            await axios.put('api/locales/' + item.id, data)
+        } else {
+            const data = {
+                socio_id: socio_id.user_id,
+                nombre: nombre,
+                codigo: codigo,
+                direccion: direccion,
+                google_map: google_map,
+                lat: lat,
+                lang: lang,
+                estado: estado,
+            }
+
+            await axios.post('api/locales', data)
+        }
+        getAll()
+        setShowModal(false)
+    }
   return (
 
     <>
@@ -50,7 +112,7 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                                     onClick={() => setShowModal(false)}>
                                     <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                                        <ClockIcon />
+                                        <XCircleIcon />
                                     </span>
                                 </button>
                             </div>
@@ -61,30 +123,30 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                         <label
                                             className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
                                             htmlFor="inline-full-name">
-                                            Usuario
+                                            Socio
                                         </label>
                                     </div>
                                     <div className="md:w-2/3">
                                         <div>
                                             {item ? (
                                                 <span>
-                                                    {item.user_name}
+                                                    {item.razon_social}
                                                 </span>
                                             ) : (
                                                 <Combobox
-                                                    value={user_id}
+                                                    value={socio_id}
                                                     onChange={
-                                                        setUserId
+                                                        setSocioId
                                                     }>
                                                     <div className="relative mt-1">
                                                         <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                                                             <Combobox.Input
                                                                 className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                                                                displayValue={user =>
-                                                                    user.name
+                                                                displayValue={socio =>
+                                                                    socio.razon_social
                                                                 }
                                                                 onChange={event =>
-                                                                    getUsers(
+                                                                    getSocios(
                                                                         event
                                                                             .target
                                                                             .value,
@@ -111,7 +173,7 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                                                 )
                                                             }>
                                                             <Combobox.Options className="absolute z-1 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                                                {users.length ===
+                                                                {socios.length ===
                                                                     0 &&
                                                                 query !==
                                                                     '' ? (
@@ -120,11 +182,11 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                                                         found.
                                                                     </div>
                                                                 ) : (
-                                                                    users.map(
-                                                                        user => (
+                                                                    socios.map(
+                                                                        socio => (
                                                                             <Combobox.Option
                                                                                 key={
-                                                                                    user.id
+                                                                                    socio.user_id
                                                                                 }
                                                                                 className={({
                                                                                     active,
@@ -136,24 +198,24 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                                                                     }`
                                                                                 }
                                                                                 value={
-                                                                                    user
+                                                                                    socio
                                                                                 }>
                                                                                 {({
-                                                                                    user_id,
+                                                                                    socio_id,
                                                                                     active,
                                                                                 }) => (
                                                                                     <>
                                                                                         <span
                                                                                             className={`block truncate ${
-                                                                                                user_id
+                                                                                                socio_id
                                                                                                     ? 'font-medium'
                                                                                                     : 'font-normal'
                                                                                             }`}>
                                                                                             {
-                                                                                                user.name
+                                                                                                socio.razon_social
                                                                                             }
                                                                                         </span>
-                                                                                        {user_id ? (
+                                                                                        {socio_id ? (
                                                                                             <span
                                                                                                 className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
                                                                                                     active
@@ -185,19 +247,19 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                         <label
                                             className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
                                             htmlFor="inline-full-name">
-                                            Razon Social
+                                            Nombre
                                         </label>
                                     </div>
                                     <div className="md:w-2/3">
                                         <input
                                             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                            value={razon_social}
+                                            value={nombre}
                                             onChange={e =>
-                                                setRazonSocial(
+                                                setNombre(
                                                     e.target.value,
                                                 )
                                             }
-                                            placeholder="Razon Social"
+                                            placeholder="Nombre"
                                             type="text"
                                         />
                                     </div>
@@ -207,37 +269,17 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                         <label
                                             className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
                                             htmlFor="inline-full-name">
-                                            Ruc
+                                            Código
                                         </label>
                                     </div>
                                     <div className="md:w-2/3">
                                         <input
                                             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                            value={ruc}
+                                            value={codigo}
                                             onChange={e =>
-                                                setRuc(e.target.value)
+                                                setCodigo(e.target.value)
                                             }
-                                            placeholder="Ruc"
-                                            type="text"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="md:flex md:items-center mb-6">
-                                    <div className="md:w-1/3">
-                                        <label
-                                            className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                                            htmlFor="inline-full-name">
-                                            DNI
-                                        </label>
-                                    </div>
-                                    <div className="md:w-2/3">
-                                        <input
-                                            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                            value={dni}
-                                            onChange={e =>
-                                                setDni(e.target.value)
-                                            }
-                                            placeholder="Dni"
+                                            placeholder="codigo"
                                             type="text"
                                         />
                                     </div>
@@ -253,7 +295,7 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                     <div className="md:w-2/3">
                                         <input
                                             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                            value={dni}
+                                            value={direccion}
                                             onChange={e =>
                                                 setDireccion(
                                                     e.target.value,
@@ -269,19 +311,19 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                         <label
                                             className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
                                             htmlFor="inline-full-name">
-                                            Telefono
+                                            Link de google Map
                                         </label>
                                     </div>
                                     <div className="md:w-2/3">
                                         <input
                                             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                            value={dni}
+                                            value={google_map}
                                             onChange={e =>
-                                                setTelefono(
+                                                setGoogleMap(
                                                     e.target.value,
                                                 )
                                             }
-                                            placeholder="Telefono"
+                                            placeholder="google map"
                                             type="text"
                                         />
                                     </div>
@@ -291,19 +333,19 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                         <label
                                             className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
                                             htmlFor="inline-full-name">
-                                            Celular
+                                            Latitud
                                         </label>
                                     </div>
                                     <div className="md:w-2/3">
                                         <input
                                             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                            value={dni}
+                                            value={lat}
                                             onChange={e =>
-                                                setCecular(
+                                                setLat(
                                                     e.target.value,
                                                 )
                                             }
-                                            placeholder="Celular"
+                                            placeholder="Latitud"
                                             type="text"
                                         />
                                     </div>
@@ -313,41 +355,19 @@ const CreateLocales = ({ title, nombre_boton, getAll, item, icono }) => {
                                         <label
                                             className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
                                             htmlFor="inline-full-name">
-                                            Correo Personal
+                                            Longitud
                                         </label>
                                     </div>
                                     <div className="md:w-2/3">
                                         <input
                                             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                            value={dni}
+                                            value={lang}
                                             onChange={e =>
-                                                setCorreoPersonal(
+                                                setLang(
                                                     e.target.value,
                                                 )
                                             }
-                                            placeholder="Correo Personal"
-                                            type="text"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="md:flex md:items-center mb-6">
-                                    <div className="md:w-1/3">
-                                        <label
-                                            className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                                            htmlFor="inline-full-name">
-                                            Correo empresarial
-                                        </label>
-                                    </div>
-                                    <div className="md:w-2/3">
-                                        <input
-                                            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                            value={dni}
-                                            onChange={e =>
-                                                setCorreoEmpresarial(
-                                                    e.target.value,
-                                                )
-                                            }
-                                            placeholder="Correo empresarial"
+                                            placeholder="Longitud"
                                             type="text"
                                         />
                                     </div>
