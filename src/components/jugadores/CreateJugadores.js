@@ -7,7 +7,8 @@ import {
     XCircleIcon,
 } from '@heroicons/react/20/solid'
 import { Switch } from '@headlessui/react'
-const CreateTipoCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
+
+const CreateJugadores = ({ title, nombre_boton, getAll, item, icono }) => {
     const [showModal, setShowModal] = useState(false)
     const [nombre, setNombre] = useState('')
     const [codigo, setCodigo] = useState('')
@@ -30,7 +31,7 @@ const CreateTipoCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
                 estado: estado,
             }
 
-            await axios.put('api/canchasTipos/' + item.id, data)
+            await axios.put('api/jugadores/' + item.id, data)
         } else {
             const data = {
                 codigo: codigo,
@@ -38,7 +39,7 @@ const CreateTipoCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
                 estado: estado,
             }
 
-            await axios.post('api/canchasTipos', data)
+            await axios.post('api/jugadores', data)
         }
         getAll()
         setShowModal(false)
@@ -190,4 +191,4 @@ const CreateTipoCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
     )
 }
 
-export default CreateTipoCanchas
+export default CreateJugadores
