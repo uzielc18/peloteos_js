@@ -16,7 +16,7 @@ const CreateTipoCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
     if (item) {
         useEffect(() => {
             setEstado(item.estado)
-            setEstado(item.codigo)
+            setCodigo(item.codigo)
             setNombre(item.nombre)
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [])
@@ -42,6 +42,9 @@ const CreateTipoCanchas = ({ title, nombre_boton, getAll, item, icono }) => {
         }
         getAll()
         setShowModal(false)
+        setCodigo('')
+        setEstado('')
+        setNombre('')
     }
     return (
         <>
